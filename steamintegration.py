@@ -1,30 +1,29 @@
 import urllib2, json
 
-class Steam:
-	__api_key = ""
 
+
+class Steam:
 	def __init__(self):
 		self.__api_key = self.__read_secret_key()
 
-	def get_library(self, user_id):
+	def get_library(self, user_id, api_key):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
-		endpoint += "key=" + str(self.__api_key)
+		endpoint += "key=" + str(api_key)
 		endpoint += "&steamid=" + str(user_id)
 		endpoint += "&format=json"
 		libraryJson = self.__get_json(endpoint)
-		raw_games = libraryJson["response"]["games"]
+		game_appids = libraryJson["response"]["games"]
 		games = []
-		for raw_game in raw_games:
-			games.append(raw_game["appid"])
+		for raw_game in game_appids:
+			id = raw_game["appid"]
+			games.append(game_cache.get_game(id))
 		return games
-
-	def __read_secret_key(self):
-		with open ("secret/steam-api-key.secret") as keyfile:
-			return keyfile.readline()
 
 	def __get_json(self, endpoint):
 		response = urllib2.urlopen(endpoint).read()
 		return json.loads(response)
+
+
 
 class Cache:
 	def __init__(self, max_size = 100000):
@@ -57,6 +56,7 @@ class Cache:
 		key = "<div class=\"apphub_AppName\">"
 		return raw_html.split(key)[1].split("<")[0]
 
+game_cache = Cache()
 
 class Game:
 	def __init__(self, id):
