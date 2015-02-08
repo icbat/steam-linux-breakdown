@@ -1,4 +1,4 @@
-import urllib2
+import urllib2, json
 
 class Steam:
 	__api_key = ""
@@ -11,17 +11,20 @@ class Steam:
 		endpoint += "key=" + str(self.__api_key)
 		endpoint += "&steamid=" + str(user_id)
 		endpoint += "&format=json"
-
-		return self.__get_json(endpoint)		
+		libraryJson = self.__get_json(endpoint)
+		raw_games = libraryJson["response"]["games"]
+		games = []
+		for raw_game in raw_games:
+			games.append(raw_game["appid"])
+		return games
 
 	def __read_secret_key(self):
 		with open ("secret/steam-api-key.secret") as keyfile:
-			content = keyfile.readline()
-			return content
+			return keyfile.readline()
 
 	def __get_json(self, endpoint):
 		response = urllib2.urlopen(endpoint).read()
-		return response
+		return json.loads(response)
 
 
 
@@ -33,7 +36,8 @@ class SteamIntegrationTest(unittest.TestCase):
 		test_id = "76561197972713139"
 		steam = Steam()
 		library = steam.get_library(test_id)
-		self.failIf(library == "")
+		self.failIf(len(library) == 0)
+		self.failUnless(220 in library)
 		return
 
 if __name__ == '__main__':
