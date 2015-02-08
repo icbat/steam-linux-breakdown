@@ -55,3 +55,6 @@ target/
 
 # Virtual Env
 venv/
+
+# secret key
+secret/
