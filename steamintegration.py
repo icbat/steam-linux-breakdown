@@ -1,3 +1,5 @@
+import urllib2
+
 class Steam:
 	__api_key = ""
 
@@ -9,9 +11,15 @@ class Steam:
 		endpoint += "key=" + self.__api_key
 		endpoint += "&steamid=" + user_id
 		endpoint += "&format=json"
-		return endpoint
+
+		return self.__get_json(endpoint)		
 
 	def __read_secret_key(self):
 		with open ("secret/steam-api-key.secret") as keyfile:
 			content = keyfile.readline()
 			return content
+
+	def __get_json(self, endpoint):
+		response = urllib2.urlopen(endpoint) 
+		print response
+		return endpoint
