@@ -84,8 +84,8 @@ import unittest
 
 class SteamIntegrationTest(unittest.TestCase):
 	# Too long right now. Need to do some mocking I think
-	def skip_get_library_happy(self):
-		test_id = "76561197972713139"
+	def test_get_library_happy(self):
+		test_id = "76561198025829075"
 		steam = Steam()
 		library = steam.get_library(test_id)
 		self.failIf(len(library) == 0)
