@@ -27,7 +27,7 @@ class Steam:
 		return json.loads(response)
 
 class Cache:
-	__games = {}
+	__games = dict()
 	__max_size = 100000
 
 	def get_game(self, appid):
@@ -37,8 +37,11 @@ class Cache:
 		self.__add_to_cache(game)
 		return game
 
+	def get_current_size(self):
+		return len(self.__games)
+
 	def __add_to_cache(self, game):
-		return
+		self.__games[game.appid] = game
 
 	def __get_from_steam(self, appid):
 		game = Game(appid)
@@ -53,17 +56,17 @@ class Cache:
 
 
 class Game:
-	__id = "DEFAULT"
+	appid = "DEFAULT"
 	name = "DEFAULT"
 	is_linux = False
 	url = "placeholderurl.com"
 
 	def __init__(self, id):
-		self.__id = id
-		self.url = "https://store.steampowered.com/app/" + str(id) + "/"			
+		self.appid = id
+		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"			
 
 	def __str__(self):
-		return str(self.__id) + " " + str(self.name) + " " + str(self.is_linux)
+		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)
 
 
 import unittest
@@ -89,6 +92,21 @@ class GamePopulationTest(unittest.TestCase):
 		negative_game = Cache().get_game(346160)
 		self.assertFalse(negative_game.is_linux, "Game not linux but marked true" + str(negative_game))
 		self.assertEquals(negative_game.name, "Barter Empire")
+
+class CacheTest(unittest.TestCase):
+	__cache = ""
+
+	def setUp(self):
+		self.__cache = Cache()
+
+	def test_cache_growth(self):
+		self.assertEquals(self.__cache.get_current_size(), 0, "Cache not empty at start!")
+		self.__cache.get_game(220)
+		self.assertEquals(self.__cache.get_current_size(), 1, "One game not added")
+		self.__cache.get_game(220)
+		self.assertEquals(self.__cache.get_current_size(), 1, "Duplicate game added!")
+		return
+
 
 if __name__ == '__main__':
 	unittest.main()
