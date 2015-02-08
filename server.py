@@ -11,7 +11,7 @@ def landing_page():
 @app.route('/<username>')
 def get_breakdown(username):
 	steam = Steam()
-	return str(steam.get_library(username))
+	return str(steam.get_library(username, api_key))
 
 if __name__ == '__main__':
 	app.debug = True

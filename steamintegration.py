@@ -3,9 +3,6 @@ import urllib2, json
 
 
 class Steam:
-	def __init__(self):
-		self.__api_key = self.__read_secret_key()
-
 	def get_library(self, user_id, api_key):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
 		endpoint += "key=" + str(api_key)
