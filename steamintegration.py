@@ -51,7 +51,7 @@ class Cache:
 		print "Fetching game from Steam:  " + str(appid)
 		raw_html = urllib2.urlopen(game.url).read()
 		game.is_linux = "platform_img linux" in raw_html
-		game.name = self.__determine_name(appid, raw_html)		
+		game.name = self.__determine_name(appid, raw_html)
 		return game
 
 	def __determine_name(self, appid, raw_html):
@@ -61,8 +61,9 @@ class Cache:
 			return
 		else:
 			temp = raw_html.split(key)[1]
-			name = temp.split("<")[0]			
-			return name
+			name = temp.split("<")[0]
+			decoded = name.decode('ascii', 'ignore')		
+			return decoded
 
 
 game_cache = Cache()

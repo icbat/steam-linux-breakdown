@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-text
+{% for game in games %}
+{{ game.name }} <br/>
+{% endfor %}
 {% endblock %}
