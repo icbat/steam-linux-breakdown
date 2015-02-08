@@ -31,7 +31,7 @@ class Cache:
 
 	def get_game(self, appid):
 		if appid in self.__bad_ids:
-			return
+			return Game(appid)
 		if appid in self.__games:
 			return self.__games[appid]
 		game = self.__get_from_steam(appid)
@@ -51,18 +51,20 @@ class Cache:
 		print "Fetching game from Steam:  " + str(appid)
 		raw_html = urllib2.urlopen(game.url).read()
 		game.is_linux = "platform_img linux" in raw_html
-		game.name = self.__determine_name(appid, raw_html)		
+		game.name = self.__determine_name(appid, raw_html)
 		return game
 
 	def __determine_name(self, appid, raw_html):
 		key = "<div class=\"apphub_AppName\">"
 		if key not in raw_html:
 			self.__bad_ids.append(appid)
-			return
+			print "ERROR Could not find game with ID " + str(appid)
+			return str(appid)
 		else:
 			temp = raw_html.split(key)[1]
-			name = temp.split("<")[0]			
-			return name
+			name = temp.split("<")[0]
+			decoded = name.decode('ascii', 'ignore')		
+			return decoded
 
 
 game_cache = Cache()
@@ -72,7 +74,7 @@ class Game:
 		self.appid = id
 		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"
 		self.is_linux = False		
-		self.name = "DEFAULT"
+		self.name = str(id)
 
 	def __str__(self):
 		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)
