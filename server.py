@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from steamintegration import Steam
 app = Flask(__name__)
 
@@ -10,8 +10,10 @@ def landing_page():
 
 @app.route('/<username>')
 def get_breakdown(username):
-
-	return str(steam.get_library(username, api_key))
+	game_list = steam.get_library(username, api_key)
+	for game in game_list:
+		print game.name
+	return render_template('output.html', games=game_list)
 
 if __name__ == '__main__':
 	app.debug = True
