@@ -30,16 +30,17 @@ class Game:
 	__id = "DEFAULT"
 	name = "DEFAULT"
 	is_linux = False
+	url = "placeholderurl.com"
 
 	def __init__(self, id):
-		self.__id = id		
+		self.__id = id
+		self.url = "https://store.steampowered.com/app/" + str(id) + "/"
 		page_data = self.__get_app_html(id)		
 		self.is_linux = "platform_img linux" in page_data
 		self.name = self.__determine_name(page_data)
 
 	def __get_app_html(self, id):
-		url = "https://store.steampowered.com/app/" + str(id) + "/"
-		return urllib2.urlopen(url).read()
+		return urllib2.urlopen(self.url).read()
 
 	def __determine_name(self, raw_html):
 		key = "<div class=\"apphub_AppName\">"
