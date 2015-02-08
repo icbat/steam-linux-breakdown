@@ -76,6 +76,7 @@ class SteamIntegrationTest(unittest.TestCase):
 		library = steam.get_library(test_id)
 		self.failIf(len(library) == 0)
 
+class GamePopulationTest(unittest.TestCase):
 	def test_game_populates(self):
 		happy_game = Cache().get_game(211820)
 		self.assertTrue(happy_game.is_linux, "Game is linux but marked false" + str(happy_game))
