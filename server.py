@@ -6,7 +6,7 @@ api_key = None
 steam = None
 @app.route('/')
 def landing_page():
-	return 'The home page'
+	return render_template('landing.html')
 
 @app.route('/<username>')
 def get_breakdown(username):
