@@ -1,7 +1,5 @@
 import urllib2, json
 
-
-
 class Steam:
 	def get_library(self, user_id, api_key):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
@@ -81,14 +79,6 @@ class Game:
 
 
 import unittest
-
-class SteamIntegrationTest(unittest.TestCase):
-	# Too long right now. Need to do some mocking I think
-	def test_get_library_happy(self):
-		test_id = "76561198025829075"
-		steam = Steam()
-		library = steam.get_library(test_id)
-		self.failIf(len(library) == 0)
 
 class GamePopulationTest(unittest.TestCase):
 	def test_game_populates(self):
