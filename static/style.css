@@ -8,18 +8,16 @@ body {
 
 header, footer {
 	padding: 10px;
-}
-
-header {
-	background-color: #f33;
-}
-
-footer {
-	background-color: #3f3;
+	color: #ecf0f1;
 }
 
 a, a:visited {
-	color: #fff;
+	color: #2ecc71;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #00EA61;
 }
 
 #content {
