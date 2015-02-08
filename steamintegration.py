@@ -19,8 +19,6 @@ class Steam:
 		response = urllib2.urlopen(endpoint).read()
 		return json.loads(response)
 
-
-
 class Cache:
 	def __init__(self, max_size = 100000):
 		self.__max_size = max_size
@@ -55,6 +53,8 @@ class Cache:
 	def __determine_name(self, appid, raw_html):
 		key = "<div class=\"apphub_AppName\">"
 		if key not in raw_html:
+			if "<div id=\"agegate_disclaim\">" in raw_html:
+				print "Game is age gated!"
 			self.__bad_ids.append(appid)
 			print "ERROR Could not find game with ID " + str(appid)
 			return str(appid)
