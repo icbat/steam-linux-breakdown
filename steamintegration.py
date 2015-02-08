@@ -27,9 +27,12 @@ class Cache:
 	def __init__(self, max_size = 100000):
 		self.__max_size = max_size
 		self.__games = dict()
+		self.__bad_ids = []
 
 	def get_game(self, appid):
-		if (appid in self.__games):
+		if appid in self.__bad_ids:
+			return
+		if appid in self.__games:
 			return self.__games[appid]
 		game = self.__get_from_steam(appid)
 		self.__add_to_cache(game)
@@ -48,12 +51,19 @@ class Cache:
 		print "Fetching game from Steam:  " + str(appid)
 		raw_html = urllib2.urlopen(game.url).read()
 		game.is_linux = "platform_img linux" in raw_html
-		game.name = self.__determine_name(raw_html)		
+		game.name = self.__determine_name(appid, raw_html)		
 		return game
 
-	def __determine_name(self, raw_html):
+	def __determine_name(self, appid, raw_html):
 		key = "<div class=\"apphub_AppName\">"
-		return raw_html.split(key)[1].split("<")[0]
+		if key not in raw_html:
+			self.__bad_ids.append(appid)
+			return
+		else:
+			temp = raw_html.split(key)[1]
+			name = temp.split("<")[0]			
+			return name
+
 
 game_cache = Cache()
 
