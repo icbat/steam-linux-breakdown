@@ -8,8 +8,8 @@ class Steam:
 
 	def get_library(self, user_id):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
-		endpoint += "key=" + self.__api_key
-		endpoint += "&steamid=" + user_id
+		endpoint += "key=" + str(self.__api_key)
+		endpoint += "&steamid=" + str(user_id)
 		endpoint += "&format=json"
 
 		return self.__get_json(endpoint)		
@@ -21,5 +21,20 @@ class Steam:
 
 	def __get_json(self, endpoint):
 		response = urllib2.urlopen(endpoint).read()
-		print response
-		return endpoint
+		return response
+
+
+
+
+import unittest
+
+class SteamIntegrationTest(unittest.TestCase):
+	def test_get_library_happy(self):
+		test_id = "76561197972713139"
+		steam = Steam()
+		library = steam.get_library(test_id)
+		self.failIf(library == "")
+		return
+
+if __name__ == '__main__':
+	unittest.main()
