@@ -15,7 +15,14 @@ def landing_page():
 
 @app.route('/<username>')
 def get_breakdown(username):
-	return str(api_key)
+	return get_library(username)
+
+def get_library(user_id):
+	endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
+	endpoint += "key=" + api_key
+	endpoint += "&steamid=" + user_id
+	endpoint += "&format=json"
+	return endpoint
 
 if __name__ == '__main__':
 	app.debug = True
