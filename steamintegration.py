@@ -28,17 +28,22 @@ class Steam:
 
 class Game:
 	__id = "DEFAULT"
-	name = "DEFAULT"	
+	name = "DEFAULT"
 	is_linux = False
 
 	def __init__(self, id):
 		self.__id = id		
 		page_data = self.__get_app_html(id)		
 		self.is_linux = "platform_img linux" in page_data
+		self.name = self.__determine_name(page_data)
 
 	def __get_app_html(self, id):
 		url = "https://store.steampowered.com/app/" + str(id) + "/"
 		return urllib2.urlopen(url).read()
+
+	def __determine_name(self, raw_html):
+		key = "<div class=\"apphub_AppName\">"
+		return raw_html.split(key)[1].split("<")[0]
 
 	def __str__(self):
 		return str(self.__id) + " " + str(self.name) + " " + str(self.is_linux)
@@ -56,12 +61,15 @@ class SteamIntegrationTest(unittest.TestCase):
 	def test_game_populates(self):
 		happy_game = Game(211820)
 		self.assertTrue(happy_game.is_linux, "Game is linux but marked false" + str(happy_game))
+		self.assertEquals(happy_game.name, "Starbound")
 
 		subtler_happy_game = Game(220)
 		self.assertTrue(subtler_happy_game.is_linux, "Game is linux but marked false" + str(subtler_happy_game))
+		self.assertEquals(subtler_happy_game.name, "Half-Life 2")
 
 		negative_game = Game(346160)
 		self.assertFalse(negative_game.is_linux, "Game not linux but marked true" + str(negative_game))
+		self.assertEquals(negative_game.name, "Barter Empire")
 
 if __name__ == '__main__':
 	unittest.main()
