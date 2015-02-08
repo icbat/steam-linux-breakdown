@@ -31,7 +31,7 @@ class Cache:
 
 	def get_game(self, appid):
 		if appid in self.__bad_ids:
-			return
+			return Game(appid)
 		if appid in self.__games:
 			return self.__games[appid]
 		game = self.__get_from_steam(appid)
@@ -74,7 +74,7 @@ class Game:
 		self.appid = id
 		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"
 		self.is_linux = False		
-		self.name = "DEFAULT"
+		self.name = str(id)
 
 	def __str__(self):
 		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)

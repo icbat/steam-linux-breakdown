@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
+<ul>
 {% for game in games %}
-{{ game.name }} <br/>
+	<li>
+		<a href="{{game.url}}">{{ game.name }}</a> is compatible with Linux? {{game.is_linux}}
+	</li>
 {% endfor %}
+</ul>
 {% endblock %}

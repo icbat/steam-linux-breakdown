@@ -11,7 +11,16 @@ def landing_page():
 @app.route('/<username>')
 def get_breakdown(username):
 	game_list = steam.get_library(username, api_key)
-	return render_template('output.html', games=game_list)
+	linux_compat_count = 0
+	for game in game_list:
+		if game.is_linux:
+			linux_compat_count += 1
+	return render_template('output.html', 
+		games=game_list, 
+		username=username, 
+		linux_compat_count = linux_compat_count, 
+		total_games = len(game_list), 
+		non_compat=len(game_list) - linux_compat_count)
 
 if __name__ == '__main__':
 	app.debug = True
