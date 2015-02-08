@@ -1,10 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
-<ul>
+<div>
+	{{username}} has {{total_games}} games in their library. {{linux_compat_count}} are compatible with Linux now, while {{non_compat}} probably aren't yet.
+</div>
+
+<table>
 {% for game in games %}
-	<li>
-		<a href="{{game.url}}">{{ game.name }}</a> is compatible with Linux? {{game.is_linux}}
-	</li>
+	<tr>
+		<td><a href="{{game.url}}">{{ game.name }}</a></td>
+		<td>{{game.is_linux}}</td>
+	<tr>
 {% endfor %}
-</ul>
+</table>
 {% endblock %}
