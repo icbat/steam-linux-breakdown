@@ -33,7 +33,9 @@ table {
 ul {
 	list-style: none;
 	text-align: left;
-
+	margin-left: auto;
+    margin-right: auto;
+    width: 20em;
 }
 
 .True:before {
