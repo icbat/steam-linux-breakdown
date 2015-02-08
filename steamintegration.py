@@ -26,6 +26,13 @@ class Steam:
 		response = urllib2.urlopen(endpoint).read()
 		return json.loads(response)
 
+class Cache:
+	__games = {}
+	__max_size = 100000
+
+	def get_game(self, appid):
+		return
+
 class Game:
 	__id = "DEFAULT"
 	name = "DEFAULT"
