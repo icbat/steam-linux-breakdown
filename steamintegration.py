@@ -20,6 +20,6 @@ class Steam:
 			return content
 
 	def __get_json(self, endpoint):
-		response = urllib2.urlopen(endpoint) 
+		response = urllib2.urlopen(endpoint).read()
 		print response
 		return endpoint
