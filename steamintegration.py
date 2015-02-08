@@ -104,6 +104,15 @@ class GamePopulationTest(unittest.TestCase):
 		self.assertFalse(negative_game.is_linux, "Game not linux but marked true" + str(negative_game))
 		self.assertEquals(negative_game.name, "Barter Empire")
 
+	def test_age_verification_passed(self):
+		age_required_game = Cache().get_game(17460)
+		self.assertEquals(age_required_game.name, "Mass Effect")
+
+	def test_games_without_store_pages_dont_do_age_verification(self):
+		game_without_page = Cache().get_game(29650)
+		self.assertEquals(game_without_page.name, str(29650))
+
+
 class CacheTest(unittest.TestCase):
 	def test_cache_growth(self):
 		cache = Cache(5)
