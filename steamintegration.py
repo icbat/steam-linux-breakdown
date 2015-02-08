@@ -58,7 +58,8 @@ class Cache:
 		key = "<div class=\"apphub_AppName\">"
 		if key not in raw_html:
 			self.__bad_ids.append(appid)
-			return
+			print "ERROR Could not find game with ID " + str(appid)
+			return str(appid)
 		else:
 			temp = raw_html.split(key)[1]
 			name = temp.split("<")[0]
