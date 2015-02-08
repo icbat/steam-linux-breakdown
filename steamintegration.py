@@ -10,6 +10,7 @@ class Steam:
 		endpoint += "&format=json"
 		libraryJson = self.__get_json(endpoint)
 		game_appids = libraryJson["response"]["games"]
+		print "Steam ID " + str(user_id) + " has " + str(len(game_appids)) + " games"
 		games = []
 		for raw_game in game_appids:
 			id = raw_game["appid"]
@@ -44,6 +45,7 @@ class Cache:
 
 	def __get_from_steam(self, appid):
 		game = Game(appid)
+		print "Fetching game from Steam:  " + str(appid)
 		raw_html = urllib2.urlopen(game.url).read()
 		game.is_linux = "platform_img linux" in raw_html
 		game.name = self.__determine_name(raw_html)		
