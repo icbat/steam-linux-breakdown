@@ -55,6 +55,7 @@ class Cache:
 		if key not in raw_html:
 			if "<div id=\"agegate_disclaim\">" in raw_html:
 				print "Game is age gated!"
+				self.__bypass_age_gate(appid)
 				return str(appid)
 			else:
 				self.__bad_ids.append(appid)
@@ -65,6 +66,16 @@ class Cache:
 			name = temp.split("<")[0]
 			decoded = name.decode('ascii', 'ignore')		
 			return decoded
+	
+	def __bypass_age_gate(self, appid):
+		form_action = "http://store.steampowered.com/agecheck/app/"+ str(appid) + "/"
+		ageYear = "1989"
+		ageMonth = "January"
+		ageDay = "10"
+		# Dunno what this does, but it's a hidden form element there
+		snr = "1_agecheck_agecheck__age-gate"
+		print form_action
+		return
 
 
 game_cache = Cache()
