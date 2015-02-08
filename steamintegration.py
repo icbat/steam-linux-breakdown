@@ -27,8 +27,9 @@ class Steam:
 		return json.loads(response)
 
 class Cache:
-	__games = dict()
-	__max_size = 100000
+	def __init__(self, max_size = 100000):
+		self.__max_size = max_size
+		self.__games = dict()
 
 	def get_game(self, appid):
 		if (appid in self.__games):
@@ -41,6 +42,8 @@ class Cache:
 		return len(self.__games)
 
 	def __add_to_cache(self, game):
+		if len(self.__games) == self.__max_size:
+			self.__games.popitem()
 		self.__games[game.appid] = game
 
 	def __get_from_steam(self, appid):
@@ -56,14 +59,11 @@ class Cache:
 
 
 class Game:
-	appid = "DEFAULT"
-	name = "DEFAULT"
-	is_linux = False
-	url = "placeholderurl.com"
-
 	def __init__(self, id):
 		self.appid = id
-		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"			
+		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"
+		self.is_linux = False		
+		self.name = "DEFAULT"
 
 	def __str__(self):
 		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)
@@ -94,18 +94,22 @@ class GamePopulationTest(unittest.TestCase):
 		self.assertEquals(negative_game.name, "Barter Empire")
 
 class CacheTest(unittest.TestCase):
-	__cache = ""
-
-	def setUp(self):
-		self.__cache = Cache()
-
 	def test_cache_growth(self):
-		self.assertEquals(self.__cache.get_current_size(), 0, "Cache not empty at start!")
-		self.__cache.get_game(220)
-		self.assertEquals(self.__cache.get_current_size(), 1, "One game not added")
-		self.__cache.get_game(220)
-		self.assertEquals(self.__cache.get_current_size(), 1, "Duplicate game added!")
-		return
+		cache = Cache(5)
+		self.assertEquals(cache.get_current_size(), 0, "Cache not empty at start!")
+		
+		cache.get_game(220)
+		self.assertEquals(cache.get_current_size(), 1, "One game not added")
+		
+		cache.get_game(220)
+		self.assertEquals(cache.get_current_size(), 1, "Duplicate game added!")
+
+	def test_boundaries(self):
+		cache = Cache(1)
+		self.assertEquals(cache.get_current_size(), 0, "Cache not empty at start!")
+		cache.get_game(220)
+		cache.get_game(211820)
+		self.assertEquals(cache.get_current_size(), 1, "Max size not upheld")		
 
 
 if __name__ == '__main__':
