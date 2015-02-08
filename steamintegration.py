@@ -55,9 +55,11 @@ class Cache:
 		if key not in raw_html:
 			if "<div id=\"agegate_disclaim\">" in raw_html:
 				print "Game is age gated!"
-			self.__bad_ids.append(appid)
-			print "ERROR Could not find game with ID " + str(appid)
-			return str(appid)
+				return str(appid)
+			else:
+				self.__bad_ids.append(appid)
+				print "ERROR Could not find game with ID " + str(appid)
+				return str(appid)
 		else:
 			temp = raw_html.split(key)[1]
 			name = temp.split("<")[0]
