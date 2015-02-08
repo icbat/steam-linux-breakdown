@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from steamintegration import Steam
 app = Flask(__name__)
 
@@ -6,7 +6,13 @@ api_key = None
 steam = None
 @app.route('/')
 def landing_page():
-	return 'The home page'
+	return render_template('landing.html')
+
+@app.route('/', methods=['POST'])
+def redirect_to_output():
+	steamid = request.form['steamid']
+	return redirect("/" + steamid, code=302)
+
 
 @app.route('/<username>')
 def get_breakdown(username):
