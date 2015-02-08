@@ -4,12 +4,11 @@
 	{{username}} has {{total_games}} games in their library. {{linux_compat_count}} are compatible with Linux now, while {{non_compat}} probably aren't yet.
 </div>
 
-<table>
+<ul>
 {% for game in games %}
-	<tr>
-		<td><a href="{{game.url}}">{{ game.name }}</a></td>
-		<td>{{game.is_linux}}</td>
-	<tr>
+<li class="{{game.is_linux}}">
+	<a href="{{game.url}}">{{ game.name }}</a>
+</li>
 {% endfor %}
-</table>
+</ul>
 {% endblock %}

@@ -26,3 +26,21 @@ a:hover {
 	padding: 10px;
 	padding-top:20px;
 }
+
+table {
+	background-color: #f33;
+}
+ul {
+	list-style: none;
+	text-align: left;
+
+}
+
+.True:before {
+	content:  "\2714 ";
+}
+
+.False:before {
+	content:  "\2716 ";
+	color: #f00;
+}
