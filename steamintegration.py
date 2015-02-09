@@ -1,4 +1,4 @@
-import urllib, urllib2, json
+import requests, urllib2, json
 
 class Steam:
 	def get_library(self, user_id, api_key):
@@ -55,34 +55,26 @@ class Cache:
 		if key not in raw_html:
 			if "<div id=\"agegate_disclaim\">" in raw_html:
 				print "Game is age gated!"
-				self.__bypass_age_gate(appid)
-				return str(appid)
+				raw_html = self.__bypass_age_gate(appid)
 			else:
 				self.__bad_ids.append(appid)
 				print "ERROR Could not find game with ID " + str(appid)
 				return str(appid)
-		else:
-			temp = raw_html.split(key)[1]
-			name = temp.split("<")[0]
-			decoded = name.decode('ascii', 'ignore')		
-			return decoded
+		temp = raw_html.split(key)[1]
+		name = temp.split("<")[0]
+		decoded = name.decode('ascii', 'ignore')		
+		return decoded
 	
 	def __bypass_age_gate(self, appid):
 		form_action = "http://store.steampowered.com/agecheck/app/"+ str(appid) + "/"
-		user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-		header = { 'User-Agent' : user_agent }
+		header = {'User-Agent' : "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
 		values = {
 			'ageYear' : "1989",
 			'ageMonth' : "January",
-			'ageDay' : "10",
-			'snr' : "1_agecheck_agecheck__age-gate" }
+			'ageDay' : "10" }
 
-		data = urllib.urlencode(values)
-		req = urllib2.Request(form_action, data, header)
-
-		response = urllib2.urlopen(req).read()
-		print response
-		return
+		r = requests.post(form_action, headers=header, data=values)
+		return r.content
 
 
 game_cache = Cache()
