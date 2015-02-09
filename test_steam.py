@@ -3,11 +3,13 @@ import unittest
 from steam import Steam, Cache
 
 class SteamIntegrationTest(unittest.TestCase):
-	# Too long right now. Need to do some mocking I think
-	def skip_get_library_happy(self):
-		test_id = "76561197972713139"
+	def test_get_library_happy(self):
+		test_id = "76561198036780759"
 		steam = Steam()
-		library = steam.get_library(test_id)
+		key_location = "secret/steam-api-key.secret"
+		with open (key_location) as keyfile:
+			api_key = keyfile.readline()
+			library = steam.get_library(test_id, api_key)
 		self.failIf(len(library) == 0)
 
 class GamePopulationTest(unittest.TestCase):
