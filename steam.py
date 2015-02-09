@@ -1,4 +1,4 @@
-import requests, urllib2, json
+import requests, json
 
 class User:
 	def get_library(self, user_id, api_key):
@@ -15,7 +15,7 @@ class User:
 		return appids
 
 	def __get_json(self, endpoint):
-		response = urllib2.urlopen(endpoint).read()
+		response = requests.get(endpoint).content
 		return json.loads(response)
 
 class Cache:
@@ -71,7 +71,7 @@ class GameFetcher():
 	def get_from_steam(self, appid):
 		game = Game(appid)
 		print "Fetching game from Steam:  " + str(appid)
-		raw_html = urllib2.urlopen(game.url).read()
+		raw_html = requests.get(game.url).content
 		game.is_linux = "platform_img linux" in raw_html
 		game.name = self.__determine_name(appid, raw_html)
 		return game
