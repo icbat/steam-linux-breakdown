@@ -1,22 +1,18 @@
 import requests, urllib2, json
 
-class Steam:
+class User:
 	def get_library(self, user_id, api_key):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
 		endpoint += "key=" + str(api_key)
 		endpoint += "&steamid=" + str(user_id)
 		endpoint += "&format=json"
 		libraryJson = self.__get_json(endpoint)
-		game_appids = libraryJson["response"]["games"]
-		print "Steam ID " + str(user_id) + " has " + str(len(game_appids)) + " games"
-		games = []
-		for raw_game in game_appids:
-			id = raw_game["appid"]
-			try:
-				games.append(game_cache.get_game(id))
-			except Exception, e:
-				print str(e) + ", skipping"
-		return games
+		raw_json = libraryJson["response"]["games"]
+		print "Steam ID " + str(user_id) + " has " + str(len(raw_json)) + " games"
+		appids = []
+		for game_json in raw_json:
+			appids.append(game_json["appid"])
+		return appids
 
 	def __get_json(self, endpoint):
 		response = urllib2.urlopen(endpoint).read()
@@ -40,6 +36,15 @@ class Cache:
 			raise e
 		self.__add_to_cache(game)
 		return game
+
+	def get_games(self, game_appids):
+		games = []
+		for appid in game_appids:
+			try:
+				games.append(self.get_game(appid))
+			except Exception, e:
+				print str(e) + ", skipping"
+		return games
 
 	def get_current_size(self):
 		return len(self.__games)

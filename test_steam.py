@@ -1,11 +1,11 @@
 
 import unittest
-from steam import Steam, Cache
+from steam import User, Cache
 
-class SteamIntegrationTest(unittest.TestCase):
+class UserTests(unittest.TestCase):
 	def test_get_library_happy(self):
 		test_id = "76561198036780759"
-		steam = Steam()
+		steam = User()
 		key_location = "secret/steam-api-key.secret"
 		with open (key_location) as keyfile:
 			api_key = keyfile.readline()
@@ -53,7 +53,12 @@ class CacheTest(unittest.TestCase):
 		self.assertEquals(cache.get_current_size(), 0, "Cache not empty at start!")
 		cache.get_game(220)
 		cache.get_game(211820)
-		self.assertEquals(cache.get_current_size(), 1, "Max size not upheld")		
+		self.assertEquals(cache.get_current_size(), 1, "Max size not upheld")
+
+	def test_get_games_ignores_bads(self):
+		cache = Cache()
+		games = cache.get_games([29650, 220])
+		self.assertEquals(len(games), 1)
 
 
 if __name__ == '__main__':
