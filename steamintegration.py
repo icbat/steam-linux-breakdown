@@ -1,4 +1,4 @@
-import urllib2, json
+import urllib, urllib2, json
 
 class Steam:
 	def get_library(self, user_id, api_key):
@@ -69,12 +69,19 @@ class Cache:
 	
 	def __bypass_age_gate(self, appid):
 		form_action = "http://store.steampowered.com/agecheck/app/"+ str(appid) + "/"
-		ageYear = "1989"
-		ageMonth = "January"
-		ageDay = "10"
-		# Dunno what this does, but it's a hidden form element there
-		snr = "1_agecheck_agecheck__age-gate"
-		print form_action
+		user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+		header = { 'User-Agent' : user_agent }
+		values = {
+			'ageYear' : "1989",
+			'ageMonth' : "January",
+			'ageDay' : "10",
+			'snr' : "1_agecheck_agecheck__age-gate" }
+
+		data = urllib.urlencode(values)
+		req = urllib2.Request(form_action, data, header)
+
+		response = urllib2.urlopen(req).read()
+		print response
 		return
 
 
