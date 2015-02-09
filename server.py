@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect
-from steamintegration import Steam
+from steam import User, Cache
 app = Flask(__name__)
 
 api_key = None
-steam = None
+cache = None
 @app.route('/')
 def landing_page():
 	return render_template('landing.html')
@@ -16,7 +16,8 @@ def redirect_to_output():
 
 @app.route('/<username>')
 def get_breakdown(username):
-	game_list = steam.get_library(username, api_key)
+	game_appids = User().get_library(username, api_key)
+	game_list = cache.get_games(game_appids)
 	linux_compat_count = 0
 	for game in game_list:
 		if game.is_linux:
@@ -35,5 +36,5 @@ if __name__ == '__main__':
 	with open (key_location) as keyfile:
 		api_key = keyfile.readline()
 	print "Instantiating master 'Steam' object"
-	steam = Steam()
+	cache = Cache()
 	app.run()
