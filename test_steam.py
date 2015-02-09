@@ -1,6 +1,6 @@
 
 import unittest
-from steamintegration import Steam, Cache
+from steam import Steam, Cache
 
 class SteamIntegrationTest(unittest.TestCase):
 	# Too long right now. Need to do some mocking I think
