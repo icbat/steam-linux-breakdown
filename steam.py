@@ -12,7 +12,10 @@ class Steam:
 		games = []
 		for raw_game in game_appids:
 			id = raw_game["appid"]
-			games.append(game_cache.get_game(id))
+			try:
+				games.append(game_cache.get_game(id))
+			except Exception, e:
+				print str(e) + ", skipping"
 		return games
 
 	def __get_json(self, endpoint):
@@ -30,7 +33,11 @@ class Cache:
 			return Game(appid)
 		if appid in self.__games:
 			return self.__games[appid]
-		game = self.__get_from_steam(appid)
+		try:
+			game = GameFetcher().get_from_steam(appid)
+		except LookupError, e:
+			self.__bad_ids.append(appid)
+			raise e
 		self.__add_to_cache(game)
 		return game
 
@@ -40,9 +47,23 @@ class Cache:
 	def __add_to_cache(self, game):
 		if len(self.__games) == self.__max_size:
 			self.__games.popitem()
-		self.__games[game.appid] = game
+		self.__games[game.appid] = game	
 
-	def __get_from_steam(self, appid):
+
+game_cache = Cache()
+
+class Game:
+	def __init__(self, id):
+		self.appid = id
+		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"
+		self.is_linux = False		
+		self.name = str(id)
+
+	def __str__(self):
+		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)
+
+class GameFetcher():
+	def get_from_steam(self, appid):
 		game = Game(appid)
 		print "Fetching game from Steam:  " + str(appid)
 		raw_html = urllib2.urlopen(game.url).read()
@@ -57,9 +78,7 @@ class Cache:
 				print "Game is age gated!"
 				raw_html = self.__bypass_age_gate(appid)
 			else:
-				self.__bad_ids.append(appid)
-				print "ERROR Could not find game with ID " + str(appid)
-				return str(appid)
+				raise LookupError("Cannot find game " + str(appid))
 		temp = raw_html.split(key)[1]
 		name = temp.split("<")[0]
 		decoded = name.decode('ascii', 'ignore')		
@@ -75,16 +94,3 @@ class Cache:
 
 		r = requests.post(form_action, headers=header, data=values)
 		return r.content
-
-
-game_cache = Cache()
-
-class Game:
-	def __init__(self, id):
-		self.appid = id
-		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"
-		self.is_linux = False		
-		self.name = str(id)
-
-	def __str__(self):
-		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)

@@ -29,8 +29,11 @@ class GamePopulationTest(unittest.TestCase):
 		self.assertEquals(age_required_game.name, "Mass Effect")
 
 	def test_games_without_store_pages_dont_do_age_verification(self):
-		game_without_page = Cache().get_game(29650)
-		self.assertEquals(game_without_page.name, str(29650))
+		try:
+			game_without_page = Cache().get_game(29650)
+			assert False
+		except LookupError:
+			pass
 
 class CacheTest(unittest.TestCase):
 	def test_cache_growth(self):
