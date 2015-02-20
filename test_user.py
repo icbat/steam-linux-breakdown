@@ -15,7 +15,7 @@ class UserTests(unittest.TestCase):
 
 	def test_user_fromExactId(self):
 		user = User("icbat")
-		pass
+		self.assertEquals("76561197972713139", user.id)
 
 	def test_user_fromGarbage(self):
 		try:
