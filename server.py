@@ -17,7 +17,10 @@ def redirect_to_output():
 
 @app.route('/<user_input>')
 def get_breakdown(user_input):
-	user = User(user_input)
+	try:
+		user = User(user_input)
+	except LookupError:
+		return redirect("/")
 	game_appids = user.get_library(api_key)
 	game_list = cache.get_games(game_appids)
 	linux_compat_count = 0
