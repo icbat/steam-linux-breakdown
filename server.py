@@ -31,11 +31,15 @@ def get_breakdown(username):
 		non_compat=len(game_list) - linux_compat_count)
 
 if __name__ == '__main__':
+	print "Server starting up!"
 	app.debug = True
+	print "Is debug mode? " + str(app.debug)
 	key_location = "secret/steam-api-key.secret"
 	print "Reading key file from " + key_location
 	with open (key_location) as keyfile:
 		api_key = keyfile.readline()
 	print "Instantiating master 'Steam' object"
 	cache = Cache()
+	print "Server startup complete"
 	app.run()
+	
