@@ -1,3 +1,4 @@
+import requests, json
 class User:
 	def get_library(self, user_id, api_key):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
