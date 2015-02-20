@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
-from steam import User, Cache
+from steam import Cache
+from steamuser import User
 app = Flask(__name__)
 
 api_key = None
