@@ -5,8 +5,17 @@
 	<input type="text" 
 		onblur="if (this.value=='') this.value=this.defaultValue" 
 		onclick="if (this.defaultValue==this.value) this.value=''" 
-		value="Enter a Steam ID" 
+		value="My steam profile name" 
 		name="steamid" />
 	<input type="submit" value="Go!"/>
 </form>
+{% raw %}
+<div class="explanation">
+Go to this page in Steam:<br/>
+
+<img src="/static/profile-walkthrough.png" alt="Open steam, click your username, click profile" /><br/>
+
+http://steamcommunity.com/id/[my_profile_name_here]
+</div>
+{% endraw %}
 {% endblock %}
