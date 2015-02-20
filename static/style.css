@@ -27,6 +27,14 @@ a:hover {
 	padding-top:20px;
 }
 
+.explanation {
+	margin-top: 20px;
+}
+
+.muted {
+	color:#aaa;
+}
+
 table {
 	background-color: #f33;
 }
