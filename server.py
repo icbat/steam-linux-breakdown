@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from steam import Cache
 from steamuser import User
+import argparse
 app = Flask(__name__)
 
 api_key = None
@@ -34,10 +35,15 @@ def get_breakdown(user_input):
 		total_games = len(game_list), 
 		non_compat=len(game_list) - linux_compat_count)
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--port', type=int, default="5000")
+parser.add_argument('--ip', default="127.0.0.1")
+parser.add_argument('--debug', default=False)
+args = parser.parse_args()
+
 if __name__ == '__main__':
-	print "Server starting up!"
-	app.debug = True
-	print "Is debug mode? " + str(app.debug)
+	print "Server starting up!"	
+	print "Is debug mode? " + str(args.debug)
 	key_location = "secret/steam-api-key.secret"
 	print "Reading key file from " + key_location
 	with open (key_location) as keyfile:
@@ -45,5 +51,8 @@ if __name__ == '__main__':
 	print "Instantiating master 'Steam' object"
 	cache = Cache()
 	print "Server startup complete"
-	app.run()
-	
+	app.run(
+    	host = args.ip,
+    	debug = args.debug,
+    	port = args.port,
+    	)
