@@ -1,4 +1,4 @@
-import urllib.request, json
+import requests as requests, json
 
 class Cache:
 	def __init__(self, max_size = 100000):
@@ -18,7 +18,7 @@ class Cache:
 			game = GameFetcher().get_from_steam(appid)
 		except LookupError:
 			self.__bad_ids.append(appid)
-			raise new_exc from original_exc
+			raise LookupError("The game was un-find-able")
 		self.__add_to_cache(game)
 		return game
 
@@ -50,16 +50,17 @@ class Game:
 		self.name = str(id)
 
 	def __str__(self):
-		return str(self.appid) + " " + str(self.name) + " " + str(self.is_linux)
+		return "{" + str(self.appid) + ", " + str(self.name) + ", " + str(self.is_linux) + "}"
 
 class GameFetcher():
 	def get_from_steam(self, appid):
 		game = Game(appid)
 		print ("Fetching game from Steam:  " + str(appid))
 		print ("Using url:  " + game.url)
-		raw_html = requests.get(game.url).content
+		raw_html = str(requests.get(game.url).content)
 		game.is_linux = "platform_img linux" in raw_html
 		game.name = self.__determine_name(appid, raw_html)
+		print ("is " + game.name + " linux compatible: " + str(game.is_linux))
 		return game
 
 	def __determine_name(self, appid, raw_html):
@@ -74,9 +75,9 @@ class GameFetcher():
 				raise LookupError("Cannot find game " + str(appid))
 		temp = raw_html.split(key)[1]
 		name = temp.split("<")[0]
-		print(name)
-		decoded = name.decode('ascii', 'ignore')
-		return decoded
+		print("Found game name: " + name)
+		# decoded = name.decode('ascii', 'ignore')
+		return name
 
 	def __bypass_age_gate(self, appid):
 		form_action = "http://store.steampowered.com/agecheck/app/"+ str(appid) + "/"

@@ -4,15 +4,15 @@ from steam import Cache
 class GamePopulationTest(unittest.TestCase):
 	def test_game_populates(self):
 		happy_game = Cache().get_game(211820)
-		self.assertTrue(happy_game.is_linux, "Game is linux but marked false" + str(happy_game))
+		self.assertTrue(happy_game.is_linux, "Game is linux but marked false: " + str(happy_game))
 		self.assertEquals(happy_game.name, "Starbound")
 
 		subtler_happy_game = Cache().get_game(220)
-		self.assertTrue(subtler_happy_game.is_linux, "Game is linux but marked false" + str(subtler_happy_game))
+		self.assertTrue(subtler_happy_game.is_linux, "Game is linux but marked false: " + str(subtler_happy_game))
 		self.assertEquals(subtler_happy_game.name, "Half-Life 2")
 
 		negative_game = Cache().get_game(346160)
-		self.assertFalse(negative_game.is_linux, "Game not linux but marked true" + str(negative_game))
+		self.assertFalse(negative_game.is_linux, "Game not linux but marked true: " + str(negative_game))
 		self.assertEquals(negative_game.name, "Barter Empire")
 
 	def test_age_verification_passed(self):

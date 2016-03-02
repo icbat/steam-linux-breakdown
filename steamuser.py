@@ -10,7 +10,7 @@ class User:
 			self.id = self.__get_steam_id(profile_text)
 			self.name = self.__get_steam_name(profile_text)
 		except IndexError:
-			raise LookupError("Could not find steamid or name of user " + str(user_input))
+			raise LookupError("Could not find steamid or name of user '" + str(user_input) + "'")
 
 	def get_library(self, api_key):
 		endpoint = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?"
@@ -32,13 +32,13 @@ class User:
 		print (response)
 		if "Error" in str(response.content):
 			print ("oh no")
-			raise LookupError("Could not find steamid or name of user " + str(user_input))
+			raise LookupError("Could not find steamid or name of user '" + str(user_input) + "'")
 		print ("Found a user!")
 		return response.content
 
 	def __get_steam_id(self, raw_html):
 		print ("getting steam id")
-		id = find_between(raw_html, "\"steamid\":\"", "\"")
+		id = find_between(raw_html, "g_steamID = \"", "\"")
 		print ("found steamid: " + str(id))
 		return id
 
@@ -53,5 +53,10 @@ class User:
 		return json.loads(response)
 
 def find_between(input, start, end):
+	string = str(input)
 	print ("splitting on '" + start + "' to '" + end + "'")
-	return input.split(start)[1].split(end)[0]
+	print ("contains start text? " + str(start in string))
+	print ("contains end text? " + str(end in string))
+	back_half = string.split(start)[1]
+	print(back_half)
+	return back_half.split(end)[0]

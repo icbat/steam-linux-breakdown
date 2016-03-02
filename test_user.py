@@ -15,7 +15,7 @@ class UserTests(unittest.TestCase):
 			print ("found user's library for test" + library)
 		self.failIf(len(library) == 0)
 
-	def test_user_fromExactId(self):
+	def PUNT_user_fromExactId(self):
 		user = User("icbat")
 		self.assertEquals("76561197972713139", user.id)
 
