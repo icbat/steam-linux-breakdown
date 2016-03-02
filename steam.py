@@ -25,7 +25,7 @@ class Cache:
 			try:
 				games.append(self.get_game(appid))
 			except Exception, e:
-				print str(e) + ", skipping"
+				print (str(e) + ", skipping")
 		return games
 
 	def get_current_size(self):
@@ -34,7 +34,7 @@ class Cache:
 	def __add_to_cache(self, game):
 		if len(self.__games) == self.__max_size:
 			self.__games.popitem()
-		self.__games[game.appid] = game	
+		self.__games[game.appid] = game
 
 
 game_cache = Cache()
@@ -43,7 +43,7 @@ class Game:
 	def __init__(self, id):
 		self.appid = id
 		self.url = "https://store.steampowered.com/app/" + str(self.appid) + "/"
-		self.is_linux = False		
+		self.is_linux = False
 		self.name = str(id)
 
 	def __str__(self):
@@ -52,7 +52,7 @@ class Game:
 class GameFetcher():
 	def get_from_steam(self, appid):
 		game = Game(appid)
-		print "Fetching game from Steam:  " + str(appid)
+		print ("Fetching game from Steam:  " + str(appid))
 		raw_html = requests.get(game.url).content
 		game.is_linux = "platform_img linux" in raw_html
 		game.name = self.__determine_name(appid, raw_html)
@@ -62,15 +62,15 @@ class GameFetcher():
 		key = "<div class=\"apphub_AppName\">"
 		if key not in raw_html:
 			if "<div id=\"agegate_disclaim\">" in raw_html:
-				print "Game is age gated!"
+				print ("Game is age gated!")
 				raw_html = self.__bypass_age_gate(appid)
 			else:
 				raise LookupError("Cannot find game " + str(appid))
 		temp = raw_html.split(key)[1]
 		name = temp.split("<")[0]
-		decoded = name.decode('ascii', 'ignore')		
+		decoded = name.decode('ascii', 'ignore')
 		return decoded
-	
+
 	def __bypass_age_gate(self, appid):
 		form_action = "http://store.steampowered.com/agecheck/app/"+ str(appid) + "/"
 		header = {'User-Agent' : "Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}

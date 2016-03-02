@@ -28,11 +28,11 @@ def get_breakdown(user_input):
 	for game in game_list:
 		if game.is_linux:
 			linux_compat_count += 1
-	return render_template('output.html', 
-		games=game_list, 
-		username=user.name, 
-		linux_compat_count = linux_compat_count, 
-		total_games = len(game_list), 
+	return render_template('output.html',
+		games=game_list,
+		username=user.name,
+		linux_compat_count = linux_compat_count,
+		total_games = len(game_list),
 		non_compat=len(game_list) - linux_compat_count)
 
 parser = argparse.ArgumentParser()
@@ -42,15 +42,15 @@ parser.add_argument('--debug', default=False)
 args = parser.parse_args()
 
 if __name__ == '__main__':
-	print "Server starting up!"	
-	print "Is debug mode? " + str(args.debug)
+	print("Server starting up!")
+	print("Is debug mode? " + str(args.debug))
 	key_location = "secret/steam-api-key.secret"
-	print "Reading key file from " + key_location
+	print("Reading key file from " + key_location)
 	with open (key_location) as keyfile:
 		api_key = keyfile.readline()
-	print "Instantiating master 'Steam' object"
+	print("Instantiating master 'Steam' object")
 	cache = Cache()
-	print "Server startup complete"
+	print("Server startup complete")
 	app.run(
     	host = args.ip,
     	debug = args.debug,
