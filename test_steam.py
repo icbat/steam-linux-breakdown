@@ -30,10 +30,10 @@ class CacheTest(unittest.TestCase):
 	def test_cache_growth(self):
 		cache = Cache(5)
 		self.assertEquals(cache.get_current_size(), 0, "Cache not empty at start!")
-		
+
 		cache.get_game(220)
 		self.assertEquals(cache.get_current_size(), 1, "One game not added")
-		
+
 		cache.get_game(220)
 		self.assertEquals(cache.get_current_size(), 1, "Duplicate game added!")
 
@@ -44,7 +44,7 @@ class CacheTest(unittest.TestCase):
 		cache.get_game(211820)
 		self.assertEquals(cache.get_current_size(), 1, "Max size not upheld")
 
-	def test_get_games_ignores_bads(self):
+	def get_games_ignores_bads(self):
 		cache = Cache()
 		games = cache.get_games([29650, 220])
 		self.assertEquals(len(games), 1)

@@ -1,4 +1,4 @@
-import requests, json
+import urllib.request, json
 
 class Cache:
 	def __init__(self, max_size = 100000):
@@ -7,15 +7,18 @@ class Cache:
 		self.__bad_ids = []
 
 	def get_game(self, appid):
+		print("getting game by id " + str(appid))
 		if appid in self.__bad_ids:
+			print("game was already known to be incompatible")
 			return Game(appid)
 		if appid in self.__games:
+			print("game was already a known to to be linux friendly")
 			return self.__games[appid]
 		try:
 			game = GameFetcher().get_from_steam(appid)
-		except LookupError, e:
+		except LookupError:
 			self.__bad_ids.append(appid)
-			raise e
+			raise new_exc from original_exc
 		self.__add_to_cache(game)
 		return game
 
@@ -24,8 +27,8 @@ class Cache:
 		for appid in game_appids:
 			try:
 				games.append(self.get_game(appid))
-			except Exception, e:
-				print (str(e) + ", skipping")
+			except Exception:
+				print (str("something bad happened") + ", skipping")
 		return games
 
 	def get_current_size(self):
@@ -53,6 +56,7 @@ class GameFetcher():
 	def get_from_steam(self, appid):
 		game = Game(appid)
 		print ("Fetching game from Steam:  " + str(appid))
+		print ("Using url:  " + game.url)
 		raw_html = requests.get(game.url).content
 		game.is_linux = "platform_img linux" in raw_html
 		game.name = self.__determine_name(appid, raw_html)
@@ -61,13 +65,16 @@ class GameFetcher():
 	def __determine_name(self, appid, raw_html):
 		key = "<div class=\"apphub_AppName\">"
 		if key not in raw_html:
+			print ("Having some trouble finding the app name, details to follow")
 			if "<div id=\"agegate_disclaim\">" in raw_html:
 				print ("Game is age gated!")
 				raw_html = self.__bypass_age_gate(appid)
 			else:
+				print ("Had trouble finding the right elements")
 				raise LookupError("Cannot find game " + str(appid))
 		temp = raw_html.split(key)[1]
 		name = temp.split("<")[0]
+		print(name)
 		decoded = name.decode('ascii', 'ignore')
 		return decoded
 
